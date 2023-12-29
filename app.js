@@ -12,6 +12,7 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
 
+//To Fetch the whole tours
 app.get('/api/v1/tours', (req, res) => {
   res.status(200).json({
     status: 'Success',
@@ -22,6 +23,29 @@ app.get('/api/v1/tours', (req, res) => {
   });
 });
 
+// To fetch specific tours by ID
+app.get('/api/v1/tours/:id', (req, res) => {
+  //This is a trick and it will convert the string to a integer
+  const id = req.params.id * 1;
+  const tour = tours.find((el) => el.id === id);
+
+  if (!tour) {
+    return res.status(404).json({
+      status: 'Failed',
+      message: 'Invalid ID',
+    });
+  }
+
+  res.status(200).json({
+    status: 'Success',
+    data: {
+      tour,
+    },
+  });
+});
+
+
+// To post a new Tour in the data
 app.post('/api/v1/tours', (req, res) => {
   // console.log(req.body);
   const newId = tours[tours.length - 1].id + 1;
