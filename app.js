@@ -16,13 +16,13 @@ const DB = process.env.DATABASE.replace(
 );
 //This is used for avoiding the deprecation
 // Copy the whole code, when creating new project
+mongoose.set('strictQuery', false);
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
     useUnifiedTopology: true, // Add this line for MongoDB version 3.6 and later
   })
-  .then((con) => {
-    console.log(con.connection);
+  .then(() => {
     console.log('DB Connection Successful');
   });
 
