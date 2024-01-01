@@ -1,8 +1,30 @@
 //Imported all the modules from express
 const express = require('express');
 const morgan = require('morgan');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 //Now app will be able to use epxress methods;
 const app = express();
+
+//Connecting mongoose
+dotenv.config({ path: './config.env' });
+
+//Replacing the real password with the DATABASE PASSWORD
+const DB = process.env.DATABASE.replace(
+  '<password>',
+  process.env.DATABASE_PASSWORD,
+);
+//This is used for avoiding the deprecation
+// Copy the whole code, when creating new project
+mongoose
+  .connect(DB, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true, // Add this line for MongoDB version 3.6 and later
+  })
+  .then((con) => {
+    console.log(con.connection);
+    console.log('DB Connection Successful');
+  });
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
