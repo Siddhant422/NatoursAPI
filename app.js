@@ -3,7 +3,6 @@ const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-//Now app will be able to use epxress methods;
 const app = express();
 
 //Connecting mongoose
