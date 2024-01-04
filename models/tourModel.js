@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 // Here we have created a schema of the database
 const tourSchema = new mongoose.Schema({
   name: {
