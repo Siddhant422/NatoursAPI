@@ -36,9 +36,6 @@ const tourSchema = new mongoose.Schema({
     trim: true,
     required: [true, 'A tour must have a description'],
   },
-  priceDiscount: {
-    type: Number,
-  },
   description: {
     type: String,
     trim: true,
@@ -48,11 +45,14 @@ const tourSchema = new mongoose.Schema({
     required: [true, 'A tour must have a cover image'],
   },
   images: [String],
+  startDates: [Date],
   createdAt: {
     type: Date,
     default: Date.now(),
   },
-  startDates: [Date],
+  priceDiscount: {
+    type: Number,
+  },
 });
 
 // Here we will create a database called tour

@@ -5,7 +5,6 @@ const Tour = require('../../models/tourModel');
 
 dotenv.config({ path: './config.env' });
 
-// Replacing the real password with the DATABASE PASSWORD
 const DB = process.env.DATABASE.replace(
   '<password>',
   process.env.DATABASE_PASSWORD,
@@ -16,50 +15,35 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => {
-    console.log('DB Connection Successful');
-  })
-  .catch((err) => {
-    console.error('Error connecting to the database:', err);
-    process.exit(1);
-  });
+  .then(() => console.log('DB connection successful!'));
 
-// Read JSON file
-const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8'),
-);
+// READ JSON FILE
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'));
 
-// Import data into database
+// IMPORT DATA INTO DB
 const importData = async () => {
   try {
     await Tour.create(tours);
-    console.log('Data successfully loaded');
-    process.exit();
+    console.log('Data successfully loaded!');
   } catch (err) {
-    console.error('Error importing data:', err);
-    process.exit(1);
+    console.log(err);
   }
+  process.exit();
 };
 
-// Delete all the data from DB
+// DELETE ALL DATA FROM DB
 const deleteData = async () => {
   try {
     await Tour.deleteMany();
-    console.log('Data successfully deleted');
-    process.exit();
+    console.log('Data successfully deleted!');
   } catch (err) {
-    console.error('Error deleting data:', err);
-    process.exit(1);
+    console.log(err);
   }
+  process.exit();
 };
 
 if (process.argv[2] === '--import') {
   importData();
 } else if (process.argv[2] === '--delete') {
   deleteData();
-} else {
-  console.error(
-    'Invalid command. Use --import to import data or --delete to delete data.',
-  );
-  process.exit(1);
 }
