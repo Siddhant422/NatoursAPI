@@ -2,6 +2,7 @@ const express = require('express');
 // eslint-disable-next-line import/newline-after-import
 const tourController = require('../controllers/tourController');
 const router = express.Router();
+const authController = require('../controllers/authController');
 
 // router.param('id',tourController.checkID)
 
@@ -14,7 +15,7 @@ router.route('/monthly-plan/:year').get(tourController.getMonthyPlan);
 
 router
   .route('/')
-  .get(tourController.getAllTours)
+  .get(authController.protect, tourController.getAllTours)
   .post(tourController.createTour);
 
 router
