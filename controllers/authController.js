@@ -5,11 +5,9 @@ const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
-const signToken = (id) => {
-  jwt.sign({ id: id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
-  });
-};
+// eslint-disable-next-line arrow-body-style, prettier/prettier
+const signToken = (id) => jwt.sign({ id: id }, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRES_IN,});
+
 exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
     name: req.body.name,
@@ -43,6 +41,8 @@ exports.login = catchAsync(async (req, res, next) => {
   }
   //3) If everything is ok, send token to client
   const token = signToken(user._id);
+  console.log(token);
+  console.log('hello');
   res.status(200).json({
     status: 'Success',
     token: token,
@@ -65,12 +65,17 @@ exports.protect = catchAsync(async (req, res, next) => {
   //Verification Token
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   // Check if user still exists
-  const freshUser = await User.findById(decoded.id);
-  if (!freshUser)
+  const CurrentUser = await User.findById(decoded.id);
+  if (!CurrentUser)
     return next(
       new AppError('The token belonging to the user does no longer exits', 401),
     );
   //Check if user changed password after token was issued.
-  freshUser.changesPasswordAfter(decoded.iat);
+  if (CurrentUser.changesPasswordAfter(decoded.iat)) {
+    return next(new AppError('User Recently changed Password!,', 401));
+  }
+
+  //Grant Access to the protected route
+  req.user = CurrentUser;
   next();
 });
