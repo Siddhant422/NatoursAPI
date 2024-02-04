@@ -38,6 +38,7 @@ Before using Natours API, make sure you have the following prerequisites install
 - Node.js
 - Express.Js
 - MongoDB
+- Mongoose
 
 ### Installation
 
